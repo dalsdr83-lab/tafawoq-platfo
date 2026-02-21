@@ -31,7 +31,7 @@
         /* حاوية الموبايل */
         .mobile-app {
             width: 100%;
-            max-width: 380px; /* مقاس الموبايل */
+            max-width: 380px;
             height: 92vh;
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(25px);
@@ -257,7 +257,7 @@
     subjects.forEach((sub, index) => {
         const div = document.createElement('div');
         div.className = 'step';
-        div.id = `step-${index}`;
+        div.id = `step-${index}`; // تمييز كل مادة بـ ID خاص
         div.innerHTML = `
             <div class="subject-name">${sub.name}</div>
             <div class="input-box">
@@ -285,13 +285,17 @@
     }
 
     function goNext() {
-        const steps = document.querySelectorAll('.step');
         if (currentStep < subjects.length - 1) {
-            if(currentStep === -1) document.getElementById('welcome').classList.remove('active');
-            else steps[currentStep].classList.remove('active');
+            // إخفاء الشاشة الحالية
+            if (currentStep === -1) {
+                document.getElementById('welcome').classList.remove('active');
+            } else {
+                document.getElementById(`step-${currentStep}`).classList.remove('active');
+            }
             
+            // الانتقال للمادة التالية
             currentStep++;
-            steps[currentStep].classList.add('active');
+            document.getElementById(`step-${currentStep}`).classList.add('active');
             
             document.getElementById('backBtn').style.display = "block";
             document.getElementById('nextBtn').innerText = (currentStep === subjects.length - 1) ? "عرض النتائج" : "المادة التالية";
@@ -303,12 +307,19 @@
 
     function goBack() {
         if (currentStep > 0) {
-            const steps = document.querySelectorAll('.step');
-            steps[currentStep].classList.remove('active');
+            document.getElementById(`step-${currentStep}`).classList.remove('active');
             currentStep--;
-            steps[currentStep].classList.add('active');
+            document.getElementById(`step-${currentStep}`).classList.add('active');
             document.getElementById('nextBtn').innerText = "المادة التالية";
             updateProgress();
+        } else if (currentStep === 0) {
+            // الرجوع لشاشة الترحيب الأولى
+            document.getElementById('step-0').classList.remove('active');
+            currentStep = -1;
+            document.getElementById('welcome').classList.add('active');
+            document.getElementById('backBtn').style.display = "none";
+            document.getElementById('nextBtn').innerText = "ابدأ الآن";
+            document.getElementById('bar').style.width = "0%";
         }
     }
 
