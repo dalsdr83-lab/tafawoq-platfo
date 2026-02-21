@@ -48,6 +48,7 @@
         .profile-section {
             text-align: center;
             margin-bottom: 20px;
+            flex-shrink: 0;
         }
 
         .designer-img {
@@ -83,6 +84,7 @@
             background: rgba(255,255,255,0.1);
             border-radius: 10px;
             margin: 20px 0;
+            flex-shrink: 0;
         }
         #bar {
             width: 0%;
@@ -157,6 +159,7 @@
             display: flex;
             gap: 10px;
             margin-top: 20px;
+            flex-shrink: 0;
         }
 
         button {
@@ -184,12 +187,27 @@
             flex: 0.4;
         }
 
-        /* شاشة التقرير */
-        #report {
-            max-height: 400px;
-            overflow-y: auto;
-            padding-right: 5px;
+        /* شاشة التقرير النهائي (معدلة لتكون قابلة للتمرير) */
+        #final-screen {
+            display: none; 
+            flex-direction: column;
+            flex-grow: 1;
+            overflow: hidden; /* لمنع خروج العناصر */
+            text-align: center;
+            animation: slideUp 0.5s ease;
         }
+
+        #report {
+            flex-grow: 1;
+            overflow-y: auto; /* تفعيل التمرير العمودي */
+            padding-right: 5px;
+            margin-bottom: 15px;
+        }
+
+        /* تصميم شريط التمرير */
+        #report::-webkit-scrollbar { width: 4px; }
+        #report::-webkit-scrollbar-thumb { background: var(--diamond-glow); border-radius: 10px; }
+
         .report-card {
             background: rgba(255,255,255,0.05);
             padding: 15px;
@@ -216,7 +234,7 @@
         <span class="app-title">المصمم الماسي</span>
     </div>
 
-    <div class="progress-wrapper">
+    <div class="progress-wrapper" id="progress-wrapper">
         <div id="bar"></div>
     </div>
 
@@ -227,15 +245,15 @@
         </div>
     </div>
 
-    <div class="nav-buttons">
+    <div class="nav-buttons" id="nav-buttons">
         <button class="btn-back" id="backBtn" onclick="goBack()" style="display:none;">السابق</button>
         <button class="btn-next" id="nextBtn" onclick="goNext()">ابدأ الآن</button>
     </div>
 
-    <div id="final-screen" style="display:none; text-align: center;">
-        <h2 class="subject-name" style="font-size: 1.5rem;">نتيجتك النهائية 💎</h2>
+    <div id="final-screen">
+        <h2 class="subject-name" style="font-size: 1.5rem; margin-bottom: 15px;">نتيجتك النهائية 💎</h2>
         <div id="report"></div>
-        <button class="btn-next" onclick="location.reload()" style="margin-top: 15px; width: 100%;">إعادة الحساب</button>
+        <button class="btn-next" onclick="location.reload()" style="width: 100%; flex-shrink: 0;">إعادة الحساب</button>
     </div>
 </div>
 
@@ -329,10 +347,13 @@
     }
 
     function showFinal() {
+        // إخفاء الأقسام القديمة
         document.getElementById('steps-box').style.display = "none";
-        document.querySelector('.nav-buttons').style.display = "none";
-        document.querySelector('.progress-wrapper').style.display = "none";
-        document.getElementById('final-screen').style.display = "block";
+        document.getElementById('nav-buttons').style.display = "none";
+        document.getElementById('progress-wrapper').style.display = "none";
+        
+        // عرض شاشة التقرير مع تفعيل الـ Flex
+        document.getElementById('final-screen').style.display = "flex";
 
         let html = "";
         subjects.forEach(sub => {
