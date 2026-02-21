@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>حاسبة مصطفى محسن الماسية</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
+
+        :root {
+            --diamond-glow: #00f2ff;
+            --premium-blue: #0066ff;
+            --bg-dark: #050a14;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-dark);
+            background: radial-gradient(circle at top right, #1a2a44, #050a14);
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: white;
+        }
+
+        /* حاوية الموبايل */
+        .mobile-app {
+            width: 100%;
+            max-width: 380px; /* مقاس الموبايل */
+            height: 92vh;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(0, 242, 255, 0.2);
+            border-radius: 40px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 20px rgba(0, 242, 255, 0.05);
+        }
+
+        /* صورة المصمم مصطفى */
+        .profile-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .designer-img {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 3px solid var(--diamond-glow);
+            padding: 3px;
+            box-shadow: 0 0 20px var(--diamond-glow);
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .designer-name {
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: var(--diamond-glow);
+            text-shadow: 0 0 10px rgba(0,242,255,0.4);
+            margin: 0;
+        }
+
+        .app-title {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* شريط التقدم */
+        .progress-wrapper {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        #bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--premium-blue), var(--diamond-glow));
+            box-shadow: 0 0 10px var(--diamond-glow);
+            border-radius: 10px;
+            transition: 0.6s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+        }
+
+        /* منطقة المحتوى */
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .step {
+            display: none;
+            animation: slideUp 0.5s ease;
+        }
+        .step.active { display: block; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .subject-name {
+            font-size: 1.8rem;
+            font-weight: 900;
+            margin-bottom: 30px;
+            background: linear-gradient(to bottom, #fff, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .input-box {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: 0.3s;
+        }
+        .input-box:focus-within {
+            border-color: var(--diamond-glow);
+            background: rgba(0, 242, 255, 0.05);
+        }
+
+        label {
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            color: #ccc;
+        }
+
+        input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            outline: none;
+        }
+
+        /* الأزرار */
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 18px;
+            border-radius: 20px;
+            border: none;
+            font-family: inherit;
+            font-weight: 900;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, var(--premium-blue), #0033aa);
+            color: white;
+            box-shadow: 0 10px 20px rgba(0, 102, 255, 0.3);
+        }
+        .btn-next:active { transform: scale(0.95); }
+
+        .btn-back {
+            background: rgba(255,255,255,0.05);
+            color: #ccc;
+            flex: 0.4;
+        }
+
+        /* شاشة التقرير */
+        #report {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        .report-card {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid var(--diamond-glow);
+        }
+
+        /* اخفاء أسهم رقم المدخلات */
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+            -webkit-appearance: none; margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="mobile-app">
+    <div class="profile-section">
+        <img src="https://l.top4top.io/p_3704zyxei1.jpg" alt="مصطفى محسن جبر" class="designer-img">
+        <p class="designer-name">مصطفى محسن جبر</p>
+        <span class="app-title">المصمم الماسي</span>
+    </div>
+
+    <div class="progress-wrapper">
+        <div id="bar"></div>
+    </div>
+
+    <div class="content-area" id="steps-box">
+        <div class="step active" id="welcome">
+            <h1 class="subject-name">حاسبة الدخول الوزاري</h1>
+            <p style="opacity: 0.7; line-height: 1.6;">أهلاً بك عزيزي الطالب، هذا التطبيق يساعدك في معرفة الدرجات المطلوبة لدخول الوزاري بكل سهولة.</p>
+        </div>
+    </div>
+
+    <div class="nav-buttons">
+        <button class="btn-back" id="backBtn" onclick="goBack()" style="display:none;">السابق</button>
+        <button class="btn-next" id="nextBtn" onclick="goNext()">ابدأ الآن</button>
+    </div>
+
+    <div id="final-screen" style="display:none; text-align: center;">
+        <h2 class="subject-name" style="font-size: 1.5rem;">نتيجتك النهائية 💎</h2>
+        <div id="report"></div>
+        <button class="btn-next" onclick="location.reload()" style="margin-top: 15px; width: 100%;">إعادة الحساب</button>
+    </div>
+</div>
+
+<script>
+    const subjects = [
+        {id: 'islam', name: 'الإسلامية'},
+        {id: 'arab', name: 'اللغة العربية'},
+        {id: 'eng', name: 'اللغة الإنكليزية'},
+        {id: 'phy', name: 'الفيزياء'},
+        {id: 'chem', name: 'الكيمياء'},
+        {id: 'math', name: 'الرياضيات'},
+        {id: 'bio', name: 'الأحياء'}
+    ];
+
+    let currentStep = -1; // -1 يعني شاشة الترحيب
+
+    // بناء واجهة المواد
+    const stepsBox = document.getElementById('steps-box');
+    subjects.forEach((sub, index) => {
+        const div = document.createElement('div');
+        div.className = 'step';
+        div.id = `step-${index}`;
+        div.innerHTML = `
+            <div class="subject-name">${sub.name}</div>
+            <div class="input-box">
+                <label>الفصل الأول</label>
+                <input type="number" id="${sub.id}_1" placeholder="0" oninput="save('${sub.id}_1')">
+            </div>
+            <div class="input-box">
+                <label>نصف السنة</label>
+                <input type="number" id="${sub.id}_2" placeholder="0" oninput="save('${sub.id}_2')">
+            </div>
+        `;
+        stepsBox.appendChild(div);
+    });
+
+    // استعادة البيانات المحفوظة
+    window.onload = () => {
+        subjects.forEach(sub => {
+            if(localStorage.getItem(`${sub.id}_1`)) document.getElementById(`${sub.id}_1`).value = localStorage.getItem(`${sub.id}_1`);
+            if(localStorage.getItem(`${sub.id}_2`)) document.getElementById(`${sub.id}_2`).value = localStorage.getItem(`${sub.id}_2`);
+        });
+    }
+
+    function save(key) {
+        localStorage.setItem(key, document.getElementById(key).value);
+    }
+
+    function goNext() {
+        const steps = document.querySelectorAll('.step');
+        if (currentStep < subjects.length - 1) {
+            if(currentStep === -1) document.getElementById('welcome').classList.remove('active');
+            else steps[currentStep].classList.remove('active');
+            
+            currentStep++;
+            steps[currentStep].classList.add('active');
+            
+            document.getElementById('backBtn').style.display = "block";
+            document.getElementById('nextBtn').innerText = (currentStep === subjects.length - 1) ? "عرض النتائج" : "المادة التالية";
+            updateProgress();
+        } else {
+            showFinal();
+        }
+    }
+
+    function goBack() {
+        if (currentStep > 0) {
+            const steps = document.querySelectorAll('.step');
+            steps[currentStep].classList.remove('active');
+            currentStep--;
+            steps[currentStep].classList.add('active');
+            document.getElementById('nextBtn').innerText = "المادة التالية";
+            updateProgress();
+        }
+    }
+
+    function updateProgress() {
+        const percent = ((currentStep + 1) / subjects.length) * 100;
+        document.getElementById('bar').style.width = percent + "%";
+    }
+
+    function showFinal() {
+        document.getElementById('steps-box').style.display = "none";
+        document.querySelector('.nav-buttons').style.display = "none";
+        document.querySelector('.progress-wrapper').style.display = "none";
+        document.getElementById('final-screen').style.display = "block";
+
+        let html = "";
+        subjects.forEach(sub => {
+            const d1 = parseFloat(document.getElementById(`${sub.id}_1`).value) || 0;
+            const d2 = parseFloat(document.getElementById(`${sub.id}_2`).value) || 0;
+            const total = d1 + d2;
+            const needed = 150 - total;
+            
+            let resText = "";
+            if(total >= 150) resText = "<span style='color:#00ffcc'>ضامن ✅</span>";
+            else if(needed > 100) resText = "<span style='color:#ff4d4d'>صعب ❌</span>";
+            else resText = `باقي: <b style='color:var(--diamond-glow)'>${needed}</b>`;
+
+            html += `
+                <div class="report-card">
+                    <span style="font-weight:bold">${sub.name}</span>
+                    <span>${resText}</span>
+                </div>
+            `;
+        });
+        document.getElementById('report').innerHTML = html;
+    }
+</script>
+
+</body>
+</html>
